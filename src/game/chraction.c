@@ -2610,10 +2610,13 @@ bool handles_shot_actors(ChrRecord *self, s32 hitpart, coord3d *vector, s32 weap
 
         if (self->prop->type == PROP_TYPE_VIEWER)
         {
-            playerNum = get_cur_playernum();
-            set_cur_player(getPlayerPointerIndex(self->prop));
-            record_damage_kills(damageToCause * 0.125f, vector->x, vector->z, playerNum, 1);
-            set_cur_player(playerNum);
+            if(damageToCause != 0.0f)
+            {
+                playerNum = get_cur_playernum();
+                set_cur_player(getPlayerPointerIndex(self->prop));
+                record_damage_kills(damageToCause * 0.125f, vector->x, vector->z, playerNum, 1);
+                set_cur_player(playerNum);
+            }
         }
         else
         {
@@ -2638,7 +2641,10 @@ bool handles_shot_actors(ChrRecord *self, s32 hitpart, coord3d *vector, s32 weap
         {
             // Cancel current animation and prepare for argh
             f32 endframe2 = -1.0f; //sp30
-            play_sound_for_shot_actor(self);
+            if(damageToCause != 0.0f)
+            {
+                play_sound_for_shot_actor(self);
+            }
 
             if (chrlvAttackAnimationRelated7F026F30(self, &endframe2)) //chrIsAnimPreventingArgh
             {
